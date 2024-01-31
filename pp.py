@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import sys
 
 enum_counter=0
 def enum(start=False):
@@ -53,13 +54,20 @@ def sim(program):
       print("error: invalid operaion")
       exit(1)
 
-output_file = "out.asm"
-def com(program):
-  pass
+def com(program, output_file):
+  with open(output_file, 'w') as out:
+    out.write("segment .text\n")
+    out.write("global _start\n")
+    out.write("_start:\n")
+    out.write("    mov rax, 60\n") # exit syscall
+    out.write("    mov rdi, 0\n")  
+    out.write("    syscall\n")  
+    out.write("    ret\n")  
 
 def usage():
   print("usage: pp")
 
 if __name__ == '__main__':
+  output_file = "out.asm"
   sim(program)
-  com(program)
+  com(program, output_file)
