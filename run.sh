@@ -1,6 +1,6 @@
 #!/bin/bash
 
-python3 pp.py
+python3 pp.py source.pp
 
 set -xe
 

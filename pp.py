@@ -36,13 +36,43 @@ def emit():
 def sys_exit():
   return (OP_EXIT, )
 
-program=[
-  push(2),
-  push(2),
-  add(),
-  dump(),
-  sys_exit(),
-]
+###### COMPILER ######
+def read_file(input_file):
+  with open(input_file) as f:
+    lines = f.readlines()
+
+  return lines
+
+# Builds list of op calls in the form of a stack
+def parse(lines):
+  program = [] # for whole program
+  for l in lines:
+    data = l.split()
+    tokens = [] # for handle of each line
+    for i in range(len(data)):
+      # handle basic expression
+      if data[i].isnumeric():
+        tokens.append(push(int(data[i])))
+      elif data[i] == 'ADD':
+        tokens.append(add())
+      elif data[i] == 'SUB':
+        tokens.append(sub())
+      elif data[i] == 'DUMP':
+        tokens.append(dump())
+      elif data[i] == 'QUIT':
+        tokens.append(sys_exit())
+      else:
+        print("error: parser")
+        exit(1)
+
+    for t in tokens:
+      program.append(t)
+
+  print(program)
+  return program
+        
+
+################
 
 def sim(program):
   stack = []
@@ -244,9 +274,22 @@ def com(program, output_file):
     out.write("  ret\n")  
 
 def usage():
-  print("usage: pp")
+  print("usage: pp <input file>")
 
 if __name__ == '__main__':
   output_file = "out.asm"
+
   #sim(program)
+
+  if len(sys.argv) < 2:
+    usage()
+    exit(1)
+
+  input_file = sys.argv[1]
+
+  # Parser Entry Point
+  lines = read_file(input_file)
+
+  program = parse(lines)
+
   com(program, output_file)
