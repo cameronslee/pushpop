@@ -4,4 +4,4 @@ hello.s
 out.*
 out
 test
-test.*
+test.o
